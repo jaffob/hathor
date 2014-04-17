@@ -1,5 +1,5 @@
 // Hathor.cpp : Defines the entry point for the application.
-//
+// huehuehue funny comment
 
 #include "stdafx.h"
 #include "Hathor.h"
