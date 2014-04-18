@@ -7,8 +7,9 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' ""version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 // Constants:
-#define MAX_LOADSTRING 100
-#define GUI_BORDER 10
+#define MAX_LOADSTRING		100
+#define GUI_BORDER			10
+#define WS_CONTROL			WS_VISIBLE | WS_CHILD
 
 // Global Variables:
 HINSTANCE hInst;								// current instance
@@ -16,8 +17,10 @@ TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 
 // Controls:
-HWND group_directLink;
-HWND group_findBySong;
+HWND tabControl;
+HWND downloadsList;
+#define IDC_TAB				100
+#define IDC_DOWNLOADS		101
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -85,7 +88,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_HATHOR));
 	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW);
-	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_HATHOR);
+	// wcex.lpszMenuName = MAKEINTRESOURCE(IDC_HATHOR);
+	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName	= szWindowClass;
 	wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -142,21 +146,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 
-		// Get client area size.
-		RECT clientSize;
-		GetClientRect(hWnd, &clientSize);
+		// Setup tab control.
+		tabControl = CreateControl(WC_TABCONTROL, NULL, 0, hWnd, IDC_TAB);
+		TabCtrl_AddTextItem(tabControl, L"By Song");
+		TabCtrl_AddTextItem(tabControl, L"YouTube");
+		TabCtrl_AddTextItem(tabControl, L"Spotify");
+		SendMessage(tabControl, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
 
-		// Create group boxes.
-		group_directLink = CreateWindowEx(0, L"Button", L"Direct Link", WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-			GUI_BORDER, GUI_BORDER, clientSize.right / 2 - GUI_BORDER * 1.5, clientSize.bottom / 2 - GUI_BORDER * 1.5,
-			hWnd, NULL, hInst, NULL);
-		SendMessage(group_directLink, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-		group_findBySong = CreateWindowEx(0, L"Button", L"Find By Song", WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-			clientSize.right / 2 + GUI_BORDER * 0.5, GUI_BORDER, clientSize.right / 2 - GUI_BORDER * 1.5, clientSize.bottom / 2 - GUI_BORDER * 1.5,
-			hWnd, NULL, hInst, NULL);
-		SendMessage(group_findBySong, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
+		// Setup downloads list.
+		downloadsList = CreateControl(WC_LISTVIEW, NULL, 0, hWnd, IDC_DOWNLOADS);
 		break;
 
 	case WM_COMMAND:
@@ -209,4 +207,52 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+// Helper function: Adds a tab to a tab control.
+int TabCtrl_AddTextItem(HWND tab, LPTSTR text)
+{
+	TCITEM tci;
+	tci.mask = TCIF_TEXT;
+	tci.pszText = text;
+	tci.cchTextMax = lstrlen(text);
+	tci.lParam = NULL;
+
+	return TabCtrl_InsertItem(tab, TabCtrl_GetItemCount(tab), &tci);
+}
+
+// Decide what rectangle to use for a control based on window size.
+// Left and top are x and y, right and botttom are width and height.
+RECT GetControlRect(int control, long width, long height)
+{
+	RECT result;
+
+	switch (control)
+	{
+	case IDC_TAB:
+		result.left = result.top = GUI_BORDER;
+		result.right = (width / 2) - (long)(GUI_BORDER * 1.5);
+		result.bottom = height - GUI_BORDER * 2;
+		break;
+	case IDC_DOWNLOADS:
+		result.left = (width / 2) + (long)(GUI_BORDER * 0.5);
+		result.top = GUI_BORDER;
+		result.right = (width / 2) - (long)(GUI_BORDER * 1.5);
+		result.bottom = height - GUI_BORDER * 2;
+		break;
+	}
+
+	return result;
+}
+
+// Helper function: make a control (in case you couldn't figure that out)
+HWND CreateControl(LPCTSTR className, LPCTSTR title, DWORD controlStyle, HWND parent, int id)
+{
+	RECT cli, ctr;
+	GetClientRect(parent, &cli);
+	ctr = GetControlRect(id, cli.right, cli.bottom);
+
+	return CreateWindowEx(0, className, title, WS_CONTROL | controlStyle,
+		ctr.left, ctr.top, ctr.right, ctr.bottom,
+		parent, (HMENU)id, GetModuleHandle(NULL), NULL);
 }
