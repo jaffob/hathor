@@ -1,7 +1,8 @@
 #pragma once
 
 #include "resource.h"
-#include "Commctrl.h"
+#include "stdafx.h"
+
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
