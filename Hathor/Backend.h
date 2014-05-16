@@ -1,4 +1,3 @@
-#include "stdafx.h"
 
 typedef struct _SONGDATA
 {
@@ -17,6 +16,7 @@ typedef struct _YOUTUBEVID
 	bool hd;
 } YOUTUBEVID;
 
-YOUTUBEVID GetYouTubeVidToSong(LPTSTR title, LPTSTR artist, SONGDATA data);
+YOUTUBEVID * FindAndChooseVidFromSong(LPTSTR title, LPTSTR artist, SONGDATA data);
+YOUTUBEVID ** VidResultsForSongSearch(LPTSTR title, LPTSTR artist, unsigned int num_results);
 LPTSTR GetWebPage(LPTSTR url);
 LPTSTR SongNameToSearchURL(LPTSTR title, LPTSTR artist);

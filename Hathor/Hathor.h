@@ -1,7 +1,7 @@
 #pragma once
 
 #include "resource.h"
-#include "stdafx.h"
+#include "Backend.h"
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);

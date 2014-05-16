@@ -1,6 +1,6 @@
 // Hathor.cpp : Defines the entry point for the application.
-// huehuehue funny comment
 
+#include "stdafx.h"
 #include "Hathor.h"
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' ""version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -20,6 +20,13 @@ HWND tabControl;
 HWND downloadsList;
 #define IDC_TAB				100
 #define IDC_DOWNLOADS		101
+
+void DebugPrint(LPTSTR str)
+{
+#ifdef _DEBUG
+	MessageBox(0, str, L"Debug", 0);
+#endif
+}
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -151,6 +158,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		TabCtrl_AddTextItem(tabControl, L"YouTube");
 		TabCtrl_AddTextItem(tabControl, L"Spotify");
 		SendMessage(tabControl, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+		DebugPrint(SongNameToSearchURL(L"Bittersweet Symph", L"The Verve"));
 
 		// Setup downloads list.
 		downloadsList = CreateControl(WC_LISTVIEW, NULL, 0, hWnd, IDC_DOWNLOADS);
