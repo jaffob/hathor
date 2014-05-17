@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "Backend.h"
+#include <cstdlib.h>
 
 #define NUM_RESULTS 8
 
@@ -15,7 +16,6 @@ YOUTUBEVID * FindAndChooseVidFromSong(LPTSTR title, LPTSTR artist, SONGDATA data
 	 * - find vid with a duration closest to duration of song (prioritize HD)
 	 */
 
-	
 	return NULL;
 }
 
@@ -27,6 +27,14 @@ YOUTUBEVID ** VidResultsForSongSearch(LPTSTR title, LPTSTR artist, unsigned int 
 
 LPTSTR GetWebPage(LPTSTR url)
 {
+	LPTSTR command = (LPTSTR)malloc(256 * sizeof(TCHAR));
+	wcscpy(command, L"curl ");
+	wcscat(command, url);
+	wcscat(command, L" > TEMP.dat");
+
+	char * actual_command = (char *)malloc(256 * sizeof(char));
+	wcstombs_s()
+	system()
 	return NULL;
 }
 
