@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <cstdio>
 
 typedef struct _SONGDATA
 {
@@ -16,7 +18,9 @@ typedef struct _YOUTUBEVID
 	bool hd;
 } YOUTUBEVID;
 
-YOUTUBEVID * FindAndChooseVidFromSong(LPTSTR title, LPTSTR artist, SONGDATA data);
-YOUTUBEVID ** VidResultsForSongSearch(LPTSTR title, LPTSTR artist, unsigned int num_results);
+YOUTUBEVID * FindAndChooseVidForSong(LPTSTR title, LPTSTR artist, SONGDATA * data);
+YOUTUBEVID ** VidResultsForSongSearch(LPTSTR title, LPTSTR artist, unsigned int * num_results);
 LPTSTR GetWebPage(LPTSTR url);
 LPTSTR SongNameToSearchURL(LPTSTR title, LPTSTR artist);
+char * FileToString(char * file);
+LPTSTR SpanToChar(LPTSTR start, LPTSTR charString);

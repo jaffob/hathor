@@ -24,7 +24,7 @@ HWND downloadsList;
 void DebugPrint(LPTSTR str)
 {
 #ifdef _DEBUG
-	MessageBox(0, str, L"Debug", 0);
+	MessageBox(0, str, "Debug", 0);
 #endif
 }
 
@@ -50,7 +50,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	iccx.dwSize = sizeof(iccx);
 	iccx.dwICC = ICC_STANDARD_CLASSES | ICC_LISTVIEW_CLASSES;
 	if (!InitCommonControlsEx(&iccx))
-		MessageBox(0, L"Failed to initialize controls.", L"Error", MB_ICONERROR);
+		MessageBox(0, "Failed to initialize controls.", "Error", MB_ICONERROR);
 
 	// Perform application initialization:
 	if (!InitInstance (hInstance, nCmdShow))
@@ -154,12 +154,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		// Setup tab control.
 		tabControl = CreateControl(WC_TABCONTROL, NULL, 0, hWnd, IDC_TAB);
-		TabCtrl_AddTextItem(tabControl, L"By Song");
-		TabCtrl_AddTextItem(tabControl, L"YouTube");
-		TabCtrl_AddTextItem(tabControl, L"Spotify");
+		TabCtrl_AddTextItem(tabControl, "By Song");
+		TabCtrl_AddTextItem(tabControl, "YouTube");
+		TabCtrl_AddTextItem(tabControl, "Spotify");
 		SendMessage(tabControl, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-		DebugPrint(SongNameToSearchURL(L"Bittersweet Symph", L"The Verve"));
 
 		// Setup downloads list.
 		downloadsList = CreateControl(WC_LISTVIEW, NULL, 0, hWnd, IDC_DOWNLOADS);
