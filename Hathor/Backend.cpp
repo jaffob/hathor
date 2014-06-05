@@ -2,9 +2,11 @@
 
 #include "stdafx.h"
 #include "Backend.h"
+#include "shellapi.h"
 
 #define NUM_RESULTS 8
 #define HD_VALUE 5
+#define SEARCH_PAGE_TIMEOUT 10000
 
 // Given a song title and artist, finds a link to a Youtube vid.
 YOUTUBEVID * FindAndChooseVidForSong(LPTSTR title, LPTSTR artist, SONGDATA * data)
@@ -119,6 +121,16 @@ LPTSTR GetWebPage(LPTSTR url)
 	//size_t num_converted = strlen(command);
 	//char * actual_command = (char *)malloc(256 * sizeof(char));
 	//strtombs_s(&num_converted, actual_command, 256, command, strlen(command));
+
+	/*SHELLEXECUTEINFO * sx = new SHELLEXECUTEINFO();
+	sx->cbSize = sizeof(SHELLEXECUTEINFO);
+	sx->fMask = SEE_MASK_NO_CONSOLE | SEE_MASK_NOASYNC;
+	sx->lpFile = "cmd.exe";
+	sx->lpParameters = command;
+	sx->nShow = SW_HIDE;
+
+	ShellExecuteEx(sx);
+	WaitForSingleObject(sx->hProcess, 10000);*/
 
 	system(command);
 	return FileToString("TEMP.dat");

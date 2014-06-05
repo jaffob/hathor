@@ -36,6 +36,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
+	SONGDATA * sd = (SONGDATA*)malloc(sizeof(SONGDATA));
+	sd->duration = 200;
+	FindAndChooseVidForSong("Get Lucky", "Daft Punk", sd);
+
  	// TODO: Place code here.
 	MSG msg;
 	HACCEL hAccelTable;
